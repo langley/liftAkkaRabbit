@@ -4,6 +4,9 @@ import de.element34.sbteclipsify._
 class LiftProject(info: ProjectInfo) extends DefaultWebProject(info) with Eclipsify {
   val liftVersion = property[Version]
 
+  val akka_repo = "Akka Maven Repository" at "http://akka.io/repository"
+  val akka = "se.scalablesolutions.akka" % "akka-actor" % "1.0"
+
   // uncomment the following if you want to use the snapshot repo
   //  val scalatoolsSnapshot = ScalaToolsSnapshots
 
