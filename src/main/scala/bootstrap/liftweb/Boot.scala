@@ -10,8 +10,8 @@ import sitemap._
 import Loc._
 import mapper._
 
-import code.model._
-
+// import code.model._
+import org.demo.model._
 
 /**
  * A class that's instantiated early and run.  It allows the application
@@ -37,7 +37,8 @@ class Boot {
     Schemifier.schemify(true, Schemifier.infoF _, User)
 
     // where to search snippet
-    LiftRules.addToPackages("code")
+    // LiftRules.addToPackages("code") default LiftWeb 
+    LiftRules.addToPackages("org.demo") // for our LiftAkkaRabbitMQ demo 
 
     // Build SiteMap
     def sitemap = SiteMap(

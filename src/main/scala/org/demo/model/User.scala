@@ -1,4 +1,4 @@
-package code
+package org.demo
 package model
 
 import net.liftweb.mapper._

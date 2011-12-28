@@ -1,4 +1,4 @@
-package code
+package org.demo
 package lib
 
 import net.liftweb._
