@@ -1,4 +1,4 @@
-package org.frontierdevelopers.scalaworkshop.day2.session2
+package org.demo.akka
 
 import akka.actor.{ActorRef, Actor}
 
