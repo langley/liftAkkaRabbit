@@ -164,8 +164,12 @@ class GameDisplay extends CometActor {
      * that allows us to customize our message */
     case Choice(description, agent, Display(otherPlayer)) => {
       SHtml.ajaxForm(
-        <li>Say "{ SHtml.text("hi", message => agent ! Display(state.name + " says: " + message)) }" to {otherPlayer}
-        <input type="submit" value="Send!" /></li>
+        <div> <p> </p>
+    		  <h3>
+    		  Say "{ SHtml.text("hi", message => agent ! Display(state.name + " says: " + message)) }" to {otherPlayer}
+    		  <input type="submit" value="Send!" />
+    		  </h3>
+    	</div>
       )
     }
     case choice =>
