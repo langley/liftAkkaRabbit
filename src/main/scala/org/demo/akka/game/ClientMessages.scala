@@ -1,4 +1,4 @@
-package org.demo.akka
+package org.demo.akka.game
 
 import akka.actor.ActorRef
 

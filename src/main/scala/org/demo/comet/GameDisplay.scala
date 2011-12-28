@@ -3,10 +3,10 @@ package org.demo.comet
 import net.liftweb.http.{S, SessionVar, SHtml, CometActor}
 import net.liftweb.http.js.{JsCmd, JsCmds}
 import xml._
-import org.demo.akka._
+import org.demo.akka.game._
 import akka.actor.{Actors, Actor}
 import net.liftweb.common.{Full, Box, Empty}
-import org.demo.akka.{BridgeActor, GameController}
+import org.demo.akka.game.{BridgeActor, GameController}
 
 /**
  * This case class will contain our client state
