@@ -1,3 +1,5 @@
 target
 *~
 lift_proto.db*
+project/boot
+lib_managed
