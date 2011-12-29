@@ -26,6 +26,6 @@ object BasicStringSender {
   /**
    * Salute the rabbit!
    */
-  def salute = amqp ! AMQPMessage("hey there!")
+  def salute = amqp ! AMQPMessage("Hey there @ " + new java.util.Date())
 }
 

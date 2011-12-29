@@ -1,4 +1,4 @@
-package code
+package org.demo
 package snippet
 
 import org.specs._
