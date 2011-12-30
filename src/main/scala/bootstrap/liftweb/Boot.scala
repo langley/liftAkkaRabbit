@@ -43,7 +43,8 @@ class Boot {
     // Build SiteMap
     def sitemap = SiteMap(
       Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
-      Menu("Gamedisplay") / "gameDisplay", 
+      Menu("Gamedisplay") / "gameDisplay",
+      Menu("Akka Calculator") / "akka-calculator",
       // more complex because this menu allows anything in the
       // /static path to be visible
       Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
@@ -78,5 +79,40 @@ class Boot {
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
+    
+    // Akka Supervisors
+    import akka.actor.Actor
+    import akka.actor.Actor.{remote,actorOf}
+    import akka.actor.Supervisor
+    import akka.config.Supervision.{SupervisorConfig,OneForOneStrategy,Supervise,Permanent}
+    import org.demo.actor.{HelloWorldActor,IntTransformer}
+    
+    /**
+     * Boot the akka remote actor service
+     * I've disabled this during development as its sodding 
+     * annoying to keep having the ports occupied!
+     */
+    // remote.start("localhost", 2552)
+    // remote.register("hello-service", actorOf[HelloWorldActor])
+    
+    LiftRules.unloadHooks.append(() => {
+      Actor.registry.shutdownAll
+    }) 
+    
+    /**
+     * Configure the supervisor heirarchy and determine the 
+     * respective cases of failure.
+     */
+    Supervisor(
+      SupervisorConfig(
+        OneForOneStrategy(List(classOf[Throwable]), 3, 1000),
+        Supervise(
+          actorOf[org.demo.actor.IntTransformer],
+          Permanent,
+          true) ::
+        Supervise(
+          actorOf[org.demo.comet.Calculator],
+          Permanent) ::
+        Nil))
   }
 }
