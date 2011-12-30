@@ -1,4 +1,5 @@
 target
+.target
 *~
 lift_proto.db*
 project/boot

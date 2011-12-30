@@ -1,4 +1,4 @@
-package org.demo.akka.rabbitmq
+package org.demo.rabbitmq
 
 import com.rabbitmq.client.{ConnectionFactory,ConnectionParameters,Channel}
 import net.liftweb.amqp.{AMQPDispatcher,AMQPAddListener,AMQPMessage,SerializedConsumer}
