@@ -92,8 +92,8 @@ class Boot {
      * I've disabled this during development as its sodding 
      * annoying to keep having the ports occupied!
      */
-    // remote.start("localhost", 2552)
-    // remote.register("hello-service", actorOf[HelloWorldActor])
+     remote.start("localhost", 2552)
+     remote.register("hello-service", actorOf[HelloWorldActor])
     
     LiftRules.unloadHooks.append(() => {
       Actor.registry.shutdownAll

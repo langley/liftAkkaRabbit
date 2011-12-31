@@ -7,6 +7,7 @@ import org.demo.akka.game._
 import akka.actor.{Actors, Actor}
 import net.liftweb.common.{Full, Box, Empty}
 import org.demo.akka.game.{BridgeActor, GameController}
+import org.demo.akka.rabbitbridge.AkkaRabbitBridgeActor
 
 /**
  * This case class will contain our client state
@@ -19,7 +20,7 @@ case class DemoMessage(messages : List[String])
  */
 class MessageGenerator extends CometActor {
   // A bridge between the Lift and Akka actor libraries
-  private val bridge = Actors.actorOf(classOf[BridgeActor]).start()
+  private val bridge = Actors.actorOf(classOf[AkkaRabbitBridgeActor]).start()
   bridge ! this
 
   // Make sure to stop our BridgeActor when we clean up Comet

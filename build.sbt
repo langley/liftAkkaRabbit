@@ -1,4 +1,4 @@
-name := "swarm"
+name := "liftAkkaRabbit"
  
 seq(webSettings: _*)
 
@@ -27,8 +27,8 @@ libraryDependencies ++= {
     //"net.liftweb" %% "lift-widgets" % liftVersion % "compile->default"
     "net.liftweb" %% "lift-mapper" % liftVersion % "compile->default",
     "net.liftweb" %% "lift-wizard" % liftVersion % "compile->default",
-	"se.scalablesolutions.akka" % "akka-actor" % "1.0" %  "compile->default",
-	"se.scalablesolutions.akka" % "akka-remote" % "1.0" %  "compile->default"
+	"se.scalablesolutions.akka" % "akka-actor" % "1.1" %  "compile->default",
+	"se.scalablesolutions.akka" % "akka-remote" % "1.1" %  "compile->default"
 	) 
 }
 

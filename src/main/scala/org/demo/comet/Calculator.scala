@@ -20,7 +20,7 @@ class Calculator extends Actor {
   }
 }
 
-import net.liftweb.common.SimpleActor
+// import net.liftweb.common.SimpleActor
 import akka.actor.ActorRef
 import scala.xml.{NodeSeq,Text}
 import net.liftweb.common.{Box,Full,Empty}
