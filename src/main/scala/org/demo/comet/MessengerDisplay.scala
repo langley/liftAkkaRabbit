@@ -22,8 +22,10 @@ class MessengerDisplay extends AkkaCometActor with net.liftweb.common.Logger {
   
   def render = 
     "#messageInput" #> messageInput(inputMessage = _) &
-    "#messages *" #> 
-    		relayedMessages.get.flatMap(msg => Box(".msg" #> Text(msg.msg))) & 
+    "#messages" #> {
+    	relayedMessages.get.flatMap( 
+			  			message => Box(".msg" #> Text(message.msg)))
+    }	& 
     "type=submit" #> SHtml.ajaxSubmit("Submit", () => {
       println(">>>>> >>>> >>>> sending: " + inputMessage )
       registry.actorFor[MessengerActor].map {
