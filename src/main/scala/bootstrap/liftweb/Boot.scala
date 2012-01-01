@@ -43,7 +43,8 @@ class Boot {
     // Build SiteMap
     def sitemap = SiteMap(
       Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
-      Menu("Gamedisplay") / "gameDisplay",
+      Menu("Game Display") / "gameDisplay",
+      Menu("Messenger Display") / "messengerDisplay", 
       Menu("Akka Calculator") / "akka-calculator",
       // more complex because this menu allows anything in the
       // /static path to be visible
@@ -78,7 +79,7 @@ class Boot {
       new Html5Properties(r.userAgent))    
 
     // Make a transaction span the whole HTTP request
-    S.addAround(DB.buildLoanWrapper)
+    // S.addAround(DB.buildLoanWrapper)
     
     // Akka Supervisors
     import akka.actor.Actor
@@ -89,7 +90,7 @@ class Boot {
     
     /**
      * Boot the akka remote actor service
-     * I've disabled this during development as its sodding 
+     * You can disable this during development as its "sodding" 
      * annoying to keep having the ports occupied!
      */
      remote.start("localhost", 2552)
@@ -112,7 +113,12 @@ class Boot {
           true) ::
         Supervise(
           actorOf[org.demo.comet.Calculator],
-          Permanent) ::
+          Permanent,
+          true) ::
+        Supervise(
+          actorOf[org.demo.comet.MessengerActor],
+          Permanent,
+          true) :: 
         Nil))
   }
 }
