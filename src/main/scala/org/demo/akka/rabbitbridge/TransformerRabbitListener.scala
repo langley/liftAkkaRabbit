@@ -29,9 +29,12 @@ class TransformerQueueListener(queueName: String)  extends Actor {
   class StringListener extends LiftActor {
     override def messageHandler = {
       case msg@AMQPMessage(contents: String) =>
+
+        import akka.actor.Actor._
+        val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552)
         cometActors.foreach(comet =>
           	comet ! DemoMessage(">> " + msg.toString + " <<", new java.util.Date())
-          )
+          )        
         // println("TransformerQueueListener received: " + msg)
         msg // TODO check to see if I really need to return this 
     }

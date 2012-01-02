@@ -16,7 +16,7 @@ trait AkkaCometActor extends CometActor {
     akkaProxy.foreach(actorRef => 
       {
     	actorRef.start
-    	remote.register(actorRef)
+    	remote.register("AkkaCometActor",actorRef)
       })
   }
   override def localShutdown {
