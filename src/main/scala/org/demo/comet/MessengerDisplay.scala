@@ -24,7 +24,7 @@ class MessengerDisplay extends AkkaCometActor {
 //	// transformer ! ListenerUpdate("join", this.asInstanceOf[AkkaCometActor])
 //	transformer ! this
 //  } 
-  
+//  
 //  override def localShutdown() { 
 //    val transformer = remote.actorFor("transformer", "localhost", 2552)
 //    // transformer ! ListenerUpdate("quit", this.asInstanceOf[AkkaCometActor])

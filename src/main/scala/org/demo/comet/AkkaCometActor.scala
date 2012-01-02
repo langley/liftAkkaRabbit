@@ -1,6 +1,7 @@
 package org.demo.comet
 
 import akka.actor.Actor
+import akka.actor.Actor.{remote,actorOf}
 import akka.actor.ActorRef
 import net.liftweb.http.{CometActor,SHtml}
 
@@ -12,10 +13,18 @@ trait AkkaCometActor extends CometActor {
   }))
   override def localSetup {
     super.localSetup
-    akkaProxy.foreach(_.start)
+    akkaProxy.foreach(actorRef => 
+      {
+    	actorRef.start
+    	remote.register(actorRef)
+      })
   }
   override def localShutdown {
     super.localShutdown
-    akkaProxy.foreach(_.stop)
+    akkaProxy.foreach(actorRef => 
+      {
+    	actorRef.stop
+    	remote.unregister(actorRef)
+      })        
   }
 }
