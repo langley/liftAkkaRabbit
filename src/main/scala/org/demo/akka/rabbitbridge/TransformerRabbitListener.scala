@@ -33,12 +33,11 @@ class TransformerQueueListener()  extends Actor {
         import akka.actor.Actor._
         val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552)
         cometActors.foreach(comet => {
-          	println(">>>> +++ >>>> ++++ >>>> actor sent " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
-          	comet ! DemoMessage(">> " + msg.toString + " <<", new java.util.Date())
+          	println(">>>> +++ >>>> ++++ >>>> actor sent " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + comet)
+          	comet ! DemoMessage(">> " + contents + " <<", new java.util.Date())
             }
           )        
-        println("TransformerQueueListener received: " + msg)
-        msg 
+        // msg 
       case fallThrough@_ => 
         println(">>>> >>>> >>> !!!! >>> Error, received: + " + fallThrough )
     }

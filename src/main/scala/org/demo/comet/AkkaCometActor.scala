@@ -4,11 +4,12 @@ import akka.actor.Actor
 import akka.actor.Actor.{remote,actorOf}
 import akka.actor.ActorRef
 import net.liftweb.http.{CometActor,SHtml}
+import org.demo.akka.rabbitbridge.DemoMessage
 
 trait AkkaCometActor extends CometActor {
   implicit val akkaProxy: Option[ActorRef] = Some(Actor.actorOf(new Actor{
     protected def receive = {
-      case a => AkkaCometActor.this ! a
+      case a => AkkaCometActor.this ! a  
     }
   }))
   override def localSetup {

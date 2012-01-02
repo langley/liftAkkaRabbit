@@ -11,8 +11,8 @@ import akka.actor.Actor.registry
 import akka.dispatch.Future
 import akka.AkkaException
 import akka.actor.Actor.remote
-
 import org.demo.akka.rabbitbridge.{DemoMessage,ListenerUpdate}
+import org.demo.comet.AkkaCometActor
 
 class MessengerDisplay extends AkkaCometActor {
   private var inputMessage = "unset"
@@ -59,8 +59,8 @@ class MessengerDisplay extends AkkaCometActor {
       println(">>>> >>>> >>>> relayedMessages: " + msgDisplay)
       // partialUpdate(SetHtml("messages", Text(msgDisplay)))
       reRender(false) // This means to render, but not the whole page
-
   }
+
 }
 
 class MessengerActor extends Actor {
@@ -68,7 +68,9 @@ class MessengerActor extends Actor {
   def receive = {
     case demoMsg@DemoMessage(msg, date) => {
       val result = DemoMessage(msg + " has been relayed!", new java.util.Date())
+      println(">>>> NNNN >>>> TTTT >>> Nearly There: " + result)
       self.reply(result) // replying to the Comet Actor trait
+      println(">>>> NNNN >>>> TTTT >>> Closer! ")
     }
   }
 }
