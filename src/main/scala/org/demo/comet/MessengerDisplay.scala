@@ -10,12 +10,27 @@ import net.liftweb.http.js.JsCmds.{SetHtml,Noop}
 import akka.actor.Actor.registry
 import akka.dispatch.Future
 import akka.AkkaException
+import akka.actor.Actor.remote
 
-sealed case class DemoMessage(msg: String, date: java.util.Date) 
+import org.demo.akka.rabbitbridge.{DemoMessage,ListenerUpdate}
 
-class MessengerDisplay extends AkkaCometActor with net.liftweb.common.Logger {
+class MessengerDisplay extends AkkaCometActor {
   private var inputMessage = "unset"
   object relayedMessages extends SessionVar[List[DemoMessage]](Nil)
+  
+//  override def localSetup {
+//	super.localSetup
+//	val transformer = remote.actorFor("transformer", "localhost", 2552)
+//	// transformer ! ListenerUpdate("join", this.asInstanceOf[AkkaCometActor])
+//	transformer ! this
+//  } 
+  
+//  override def localShutdown() { 
+//    val transformer = remote.actorFor("transformer", "localhost", 2552)
+//    // transformer ! ListenerUpdate("quit", this.asInstanceOf[AkkaCometActor])
+//    transformer ! this
+//    super.localShutdown()
+//  }
   
   def messageInput(f: String => Any) = 
     SHtml.text("enter a message", input => f(input))
@@ -47,7 +62,7 @@ class MessengerDisplay extends AkkaCometActor with net.liftweb.common.Logger {
   }
 }
 
-class MessengerActor extends Actor with net.liftweb.common.Logger {
+class MessengerActor extends Actor {
   // Akka actor message loop
   def receive = {
     case demoMsg@DemoMessage(msg, date) => {
