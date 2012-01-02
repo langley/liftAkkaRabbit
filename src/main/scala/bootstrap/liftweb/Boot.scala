@@ -119,6 +119,10 @@ class Boot {
           actorOf[org.demo.comet.MessengerActor],
           Permanent,
           true) :: 
+        Supervise(
+          actorOf[org.demo.akka.rabbitbridge.TransformerQueueListener],
+          Permanent,
+          true) ::           
         Nil))
   }
 }

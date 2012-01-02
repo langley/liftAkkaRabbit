@@ -43,9 +43,10 @@ class MessengerDisplay extends AkkaCometActor {
     }	& 
     "type=submit" #> SHtml.ajaxSubmit("Submit", () => {
       println(">>>>> >>>> >>>> sending: " + inputMessage )
-      registry.actorFor[MessengerActor].map {
-        _ ! DemoMessage(inputMessage, new java.util.Date)
-      }
+//      registry.actorFor[MessengerActor].map {
+//        _ ! DemoMessage(inputMessage, new java.util.Date)
+//      }
+      org.demo.akka.rabbitbridge.TransformerStringSender.send(inputMessage)
       Noop
     }) andThen SHtml.makeFormsAjax
   

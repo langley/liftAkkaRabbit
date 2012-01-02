@@ -10,7 +10,8 @@ import org.demo.comet.AkkaCometActor
 // --------------------------------------------------------------------------
 // A RabbitMQ Listener that first transforms messages then relays them to 
 // a list of interested actors 
-class TransformerQueueListener(queueName: String)  extends Actor {
+class TransformerQueueListener()  extends Actor {
+  val queueName = "relay"
   val params = new ConnectionParameters
   params.setUsername("guest")
   params.setPassword("guest")
@@ -29,14 +30,17 @@ class TransformerQueueListener(queueName: String)  extends Actor {
   class StringListener extends LiftActor {
     override def messageHandler = {
       case msg@AMQPMessage(contents: String) =>
-
         import akka.actor.Actor._
         val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552)
-        cometActors.foreach(comet =>
+        cometActors.foreach(comet => {
+          	println(">>>> +++ >>>> ++++ >>>> actor sent " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
           	comet ! DemoMessage(">> " + msg.toString + " <<", new java.util.Date())
+            }
           )        
-        // println("TransformerQueueListener received: " + msg)
-        msg // TODO check to see if I really need to return this 
+        println("TransformerQueueListener received: " + msg)
+        msg 
+      case fallThrough@_ => 
+        println(">>>> >>>> >>> !!!! >>> Error, received: + " + fallThrough )
     }
   }
   val stringListener = new StringListener()
