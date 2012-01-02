@@ -2,9 +2,9 @@ package org.demo.comet
 
 import akka.actor.Actor
 import akka.actor.Actor.{remote,actorOf}
-import akka.actor.ActorRef
+import akka.actor.ActorRef 
 import net.liftweb.http.{CometActor,SHtml}
-import org.demo.akka.rabbitbridge.DemoMessage
+import org.demo.akka.rabbitbridge.{DemoMessage,ListenerUpdate}
 
 trait AkkaCometActor extends CometActor {
   implicit val akkaProxy: Option[ActorRef] = Some(Actor.actorOf(new Actor{
@@ -18,6 +18,8 @@ trait AkkaCometActor extends CometActor {
       {
     	actorRef.start
     	remote.register("AkkaCometActor",actorRef)
+    	val transformer = remote.actorFor("org.demo.akka.rabbitbridge.TransformerQueueListener", "localhost", 2552)
+    	transformer ! ListenerUpdate("join",actorRef)
       })
   }
   override def localShutdown {
@@ -26,6 +28,8 @@ trait AkkaCometActor extends CometActor {
       {
     	actorRef.stop
     	remote.unregister(actorRef)
+    	val transformer = remote.actorFor("org.demo.actor.IntTransformer", "localhost", 2552)
+    	transformer ! ListenerUpdate("quit",actorRef)
       })        
   }
 }

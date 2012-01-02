@@ -4,6 +4,7 @@ import com.rabbitmq.client.{ConnectionFactory,ConnectionParameters,Channel}
 import net.liftweb.amqp.{AMQPDispatcher,AMQPAddListener,AMQPMessage,SerializedConsumer}
 import net.liftweb.actor.LiftActor
 import akka.actor.Actor
+import akka.actor.ActorRef
 import net.liftweb.http.CometActor
 import org.demo.comet.AkkaCometActor
 
@@ -23,7 +24,7 @@ class TransformerQueueListener()  extends Actor {
 
   // --------------------------------------------------------------------------
   // The list of listeners that need to receive transformed messages
-  var cometActors: List[CometActor] = Nil 
+  var cometActors: List[ActorRef] = Nil 
   
   // --------------------------------------------------------------------------  
   // Listener that does the actual work
@@ -31,13 +32,33 @@ class TransformerQueueListener()  extends Actor {
     override def messageHandler = {
       case msg@AMQPMessage(contents: String) =>
         import akka.actor.Actor._
-        val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552)
-        cometActors.foreach(comet => {
-          	println(">>>> +++ >>>> ++++ >>>> actor sent " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + comet)
-          	comet ! DemoMessage(">> " + contents + " <<", new java.util.Date())
-            }
-          )        
-        // msg 
+        // val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552).filter(actor => ! actor.isInstanceOf[akka.actor.SupervisorActor])
+        val dmessage = DemoMessage(">> " + contents + " <<", new java.util.Date())
+        cometActors.foreach(cometActor => {
+        	println(">>>> +++ >>>> ++++ >>>> actor of type " + cometActor + " sent message: " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
+        	cometActor ! dmessage // DemoMessage(">> " + contents + " <<", new java.util.Date())          
+        })
+//        val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552).filter(actor => actor.isDefinedAt(dmessage))        
+//        cometActors.foreach(cometActor => {
+//          	println(">>>> +++ >>>> ++++ >>>> actor of type " + cometActor + " sent message: " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
+//          	cometActor ! dmessage // DemoMessage(">> " + contents + " <<", new java.util.Date())
+//            }
+//          )
+//        cometActors.foreach(
+//            _ match { 
+//              case cometActor: Actor => {
+//            	  println(">>>> +++ >>>> ++++ >>>> actor sent message to: " + cometActor + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + cometActor)
+//            	  cometActor ! DemoMessage(">> " + contents + " <<", new java.util.Date())
+//              }
+//              case cometActor: AkkaCometActor => {
+//            	  println(">>>> +++ >>>> ++++ >>>> actor sent message to: " + cometActor + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + cometActor)
+//            	  cometActor ! DemoMessage(">> " + contents + " <<", new java.util.Date())
+//              }
+//              case cometActor@_ =>  { // do nothing
+//            	  println(">>> +++ >>>> +++ >>> actor DIDN'T SEND to: " + cometActor)
+//              }
+//            }
+//          )        
       case fallThrough@_ => 
         println(">>>> >>>> >>> !!!! >>> Error, received: + " + fallThrough )
     }
@@ -52,7 +73,7 @@ class TransformerQueueListener()  extends Actor {
       cometActors = update.actor :: cometActors
     case update@ListenerUpdate("quit",_) =>
       cometActors = cometActors.filter(actor => actor != update.actor)
-    case actor: AkkaCometActor => 
+    case actor: ActorRef => 
       if (cometActors.contains(actor)) cometActors = cometActors.filter(_ != actor) 
       else cometActors = actor :: cometActors
   }

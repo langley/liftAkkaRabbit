@@ -57,8 +57,8 @@ class MessengerDisplay extends AkkaCometActor {
       relayedMessages.set(message :: relayedMessages.get) 
       val msgDisplay = relayedMessages.get.map(_.msg).mkString(", ")
       println(">>>> >>>> >>>> relayedMessages: " + msgDisplay)
-      // partialUpdate(SetHtml("messages", Text(msgDisplay)))
       reRender(false) // This means to render, but not the whole page
+      println(">>>> ++++ >>>> ++++ >>>> DONE.")
   }
 
 }
