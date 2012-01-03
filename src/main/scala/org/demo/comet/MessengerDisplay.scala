@@ -11,26 +11,13 @@ import akka.actor.Actor.registry
 import akka.dispatch.Future
 import akka.AkkaException
 import akka.actor.Actor.remote
+
 import org.demo.akka.rabbitbridge.{DemoMessage,ListenerUpdate}
-import org.demo.comet.AkkaCometActor
+import org.demo.akka.rabbitbridge.TransformerStringSender
 
 class MessengerDisplay extends AkkaCometActor {
   private var inputMessage = "unset"
   object relayedMessages extends SessionVar[List[DemoMessage]](Nil)
-  
-//  override def localSetup {
-//	super.localSetup
-//	val transformer = remote.actorFor("transformer", "localhost", 2552)
-//	// transformer ! ListenerUpdate("join", this.asInstanceOf[AkkaCometActor])
-//	transformer ! this
-//  } 
-//  
-//  override def localShutdown() { 
-//    val transformer = remote.actorFor("transformer", "localhost", 2552)
-//    // transformer ! ListenerUpdate("quit", this.asInstanceOf[AkkaCometActor])
-//    transformer ! this
-//    super.localShutdown()
-//  }
   
   def messageInput(f: String => Any) = 
     SHtml.text("enter a message", input => f(input))
@@ -42,37 +29,18 @@ class MessengerDisplay extends AkkaCometActor {
 			  			message => Box(".msg" #> Text(message.msg)))
     }	& 
     "type=submit" #> SHtml.ajaxSubmit("Submit", () => {
-      println(">>>>> >>>> >>>> sending: " + inputMessage )
-//      registry.actorFor[MessengerActor].map {
-//        _ ! DemoMessage(inputMessage, new java.util.Date)
-//      }
-      org.demo.akka.rabbitbridge.TransformerStringSender.send(inputMessage)
+        TransformerStringSender.send(inputMessage)
       Noop
     }) andThen SHtml.makeFormsAjax
   
   // Comet actor message loop 
   override def mediumPriority = {
     case message: DemoMessage => 
-      println(">>>> >>>> >>>> received: " + message.toString)
       relayedMessages.set(message :: relayedMessages.get) 
       val msgDisplay = relayedMessages.get.map(_.msg).mkString(", ")
-      println(">>>> >>>> >>>> relayedMessages: " + msgDisplay)
       reRender(false) // This means to render, but not the whole page
-      println(">>>> ++++ >>>> ++++ >>>> DONE.")
   }
 
-}
-
-class MessengerActor extends Actor {
-  // Akka actor message loop
-  def receive = {
-    case demoMsg@DemoMessage(msg, date) => {
-      val result = DemoMessage(msg + " has been relayed!", new java.util.Date())
-      println(">>>> NNNN >>>> TTTT >>> Nearly There: " + result)
-      self.reply(result) // replying to the Comet Actor trait
-      println(">>>> NNNN >>>> TTTT >>> Closer! ")
-    }
-  }
 }
 
 

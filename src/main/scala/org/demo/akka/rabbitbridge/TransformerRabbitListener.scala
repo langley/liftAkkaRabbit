@@ -31,36 +31,10 @@ class TransformerQueueListener()  extends Actor {
   class StringListener extends LiftActor {
     override def messageHandler = {
       case msg@AMQPMessage(contents: String) =>
-        import akka.actor.Actor._
-        // val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552).filter(actor => ! actor.isInstanceOf[akka.actor.SupervisorActor])
-        val dmessage = DemoMessage(">> " + contents + " <<", new java.util.Date())
         cometActors.foreach(cometActor => {
         	println(">>>> +++ >>>> ++++ >>>> actor of type " + cometActor + " sent message: " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
-        	cometActor ! dmessage // DemoMessage(">> " + contents + " <<", new java.util.Date())          
+        	cometActor ! DemoMessage(">> " + contents + " <<", new java.util.Date())          
         })
-//        val cometActors = registry.actorsFor("AkkaCometActor", "localhost", 2552).filter(actor => actor.isDefinedAt(dmessage))        
-//        cometActors.foreach(cometActor => {
-//          	println(">>>> +++ >>>> ++++ >>>> actor of type " + cometActor + " sent message: " + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()))
-//          	cometActor ! dmessage // DemoMessage(">> " + contents + " <<", new java.util.Date())
-//            }
-//          )
-//        cometActors.foreach(
-//            _ match { 
-//              case cometActor: Actor => {
-//            	  println(">>>> +++ >>>> ++++ >>>> actor sent message to: " + cometActor + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + cometActor)
-//            	  cometActor ! DemoMessage(">> " + contents + " <<", new java.util.Date())
-//              }
-//              case cometActor: AkkaCometActor => {
-//            	  println(">>>> +++ >>>> ++++ >>>> actor sent message to: " + cometActor + DemoMessage(">> " + msg.toString + " <<", new java.util.Date()) + " to: " + cometActor)
-//            	  cometActor ! DemoMessage(">> " + contents + " <<", new java.util.Date())
-//              }
-//              case cometActor@_ =>  { // do nothing
-//            	  println(">>> +++ >>>> +++ >>> actor DIDN'T SEND to: " + cometActor)
-//              }
-//            }
-//          )        
-      case fallThrough@_ => 
-        println(">>>> >>>> >>> !!!! >>> Error, received: + " + fallThrough )
     }
   }
   val stringListener = new StringListener()
@@ -73,9 +47,6 @@ class TransformerQueueListener()  extends Actor {
       cometActors = update.actor :: cometActors
     case update@ListenerUpdate("quit",_) =>
       cometActors = cometActors.filter(actor => actor != update.actor)
-    case actor: ActorRef => 
-      if (cometActors.contains(actor)) cometActors = cometActors.filter(_ != actor) 
-      else cometActors = actor :: cometActors
   }
 }
 
