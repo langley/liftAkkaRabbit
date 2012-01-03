@@ -18,11 +18,10 @@ import org.demo.akka.rabbitbridge.TransformerStringSender
 class MessengerDisplay extends AkkaCometActor {
   private var inputMessage = "unset"
   object relayedMessages extends SessionVar[List[DemoMessage]](Nil)
-  
-  def messageInput(f: String => Any) = 
-    SHtml.text("enter a message", input => f(input))
-  
-  def render = 
+
+  // --------------------------------------------------------------------------
+  // Uses css selectors to generate the form and display the mesages  
+  def render = { 
     "#messageInput" #> messageInput(inputMessage = _) &
     "#messages" #> {
     	relayedMessages.get.flatMap( 
@@ -32,13 +31,21 @@ class MessengerDisplay extends AkkaCometActor {
         TransformerStringSender.send(inputMessage)
       Noop
     }) andThen SHtml.makeFormsAjax
+  }
   
+  // --------------------------------------------------------------------------    
   // Comet actor message loop 
   override def mediumPriority = {
     case message: DemoMessage => 
       relayedMessages.set(message :: relayedMessages.get) 
       val msgDisplay = relayedMessages.get.map(_.msg).mkString(", ")
       reRender(false) // This means to render, but not the whole page
+  }
+    
+  // --------------------------------------------------------------------------
+  // Convenience method for generating input 
+  def messageInput(f: String => Any) = {
+    SHtml.text("enter a message", input => f(input))
   }
 
 }
