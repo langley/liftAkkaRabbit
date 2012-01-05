@@ -46,6 +46,8 @@ class Boot {
       Menu("Game Display") / "gameDisplay",
       Menu("Messenger Display") / "messengerDisplay", 
       Menu("Akka Calculator") / "akka-calculator",
+      // Menu("Protected") / "protected" >> If(() => User.loggedIn_?, "You must be logged in")),      
+      Menu(Loc("protected", Link(List("protected"), false, "/protected"), "protected", User.loginFirst)),
       // more complex because this menu allows anything in the
       // /static path to be visible
       Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
