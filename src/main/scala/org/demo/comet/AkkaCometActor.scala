@@ -28,7 +28,7 @@ trait AkkaCometActor extends CometActor {
       {
     	actorRef.stop
     	remote.unregister(actorRef)
-    	val transformer = remote.actorFor("org.demo.actor.IntTransformer", "localhost", 2552)
+    	val transformer = remote.actorFor("org.demo.actor.TransformerQueueListener", "localhost", 2552)
     	transformer ! ListenerUpdate("quit",actorRef)
       })        
   }
