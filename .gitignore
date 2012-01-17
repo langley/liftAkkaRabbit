@@ -7,3 +7,4 @@ lib_managed
 src_managed
 .project
 .classpath
+.lib
