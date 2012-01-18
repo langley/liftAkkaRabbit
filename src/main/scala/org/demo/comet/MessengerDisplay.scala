@@ -20,9 +20,9 @@ class MessengerDisplay extends AkkaCometActor {
   object relayedMessages extends SessionVar[List[DemoMessage]](Nil)
 
   // --------------------------------------------------------------------------
-  // Uses css selectors to generate the form and display the mesages  
+  // Uses css selectors to generate the form and display the messages  
   def render = { 
-    "#messageInput" #> messageInput(inputMessage = _) &
+    "#messageInput" #> SHtml.text("enter a message", (inputMessage = _)) & 
     "#messages" #> {
     	relayedMessages.get.flatMap( 
 			  			message => Box(".msg" #> Text(message.msg)))
@@ -43,10 +43,12 @@ class MessengerDisplay extends AkkaCometActor {
   }
     
   // --------------------------------------------------------------------------
-  // Convenience method for generating input 
-  def messageInput(f: String => Any) = {
-    SHtml.text("enter a message", input => f(input))
-  }
+  // Convenience method for capturing input
+  //  def messageInput(f: String => Any) = {
+  //    SHtml.text("enter a message", input => f(input))
+  //  }
+  //  To use this put the below in the render method
+  //  "#messageInput" #> messageInput(inputMessage = _) &
 
 }
 
