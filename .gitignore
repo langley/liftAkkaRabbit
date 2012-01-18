@@ -1,10 +1,11 @@
 target
+.cache
+.project
+.classpath
+.lib
 .target
 *~
 lift_proto.db*
 project/boot
 lib_managed
 src_managed
-.project
-.classpath
-.lib

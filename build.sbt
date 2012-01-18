@@ -35,7 +35,7 @@ libraryDependencies ++= {
 // Customize any further dependencies as desired
 libraryDependencies ++= Seq(
   "org.eclipse.jetty" % "jetty-webapp" % "7.3.1.v20110307" % "container,test", // For Jetty 7
-  //"org.mortbay.jetty" % "jetty" % "6.1.26" % "container,test", // For Jetty 6	
+  "org.mortbay.jetty" % "jetty" % "6.1.26" % "container,test", // For Jetty 6	
   "com.novocode" % "junit-interface" % "0.7" % "test->default", //sbt's JUnit4 test interface
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "test->default", // For specs.org tests
   "javax.servlet" % "servlet-api" % "2.5" % "provided->default",
