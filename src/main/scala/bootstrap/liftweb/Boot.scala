@@ -42,16 +42,11 @@ class Boot {
 
     // Build SiteMap
     def sitemap = SiteMap(
-      Menu.i("Home") / "index" >> User.AddUserMenusAfter, // the simple way to declare a menu
+      Menu("Home") / "index",
+      Menu("Messenger Display") / "messengerDisplay",
       Menu("Game Display") / "gameDisplay",
-      Menu("Messenger Display") / "messengerDisplay", 
-      Menu("Akka Calculator") / "akka-calculator",
-      // Menu("Protected") / "protected" >> If(() => User.loggedIn_?, "You must be logged in")),      
-      Menu(Loc("protected", Link(List("protected"), false, "/protected"), "protected", User.loginFirst)),
-      // more complex because this menu allows anything in the
-      // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")))
+      Menu("Akka Calculator") / "akka-calculator"  >> User.AddUserMenusAfter,
+      Menu(Loc("protected", Link(List("protected"), false, "/protected"), "protected", User.loginFirst)))
 
     def sitemapMutators = User.sitemapMutator
 
